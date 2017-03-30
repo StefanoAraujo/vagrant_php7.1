@@ -1,11 +1,23 @@
 #!/bin/bash
+mensagem = "VAGRANT MENSAGEM:"
+echo "***************************************************************"
+echo "***************************************************************"
+echo "*** Iniciando instalacao do ambiente de Desenvolvimento PHP ***"
+echo "***       -PHP 7.1                                           ***"
+echo "***       -MySQL 5.5                                         ***"
+echo "***       -Git                                               ***"
+echo "***       -PhpMyAdmin                                        ***"
+echo "***       -Composer                                          ***"
+echo "***       -cURL                                              ***"
+echo "***       -Vim                                               ***"
+echo "***       -Redis                                             ***"
+echo "***************************************************************"
+echo "***************************************************************"
 
-echo "---- Iniciando instalacao do ambiente de Desenvolvimento PHP [EspecializaTI] ---"
-
-echo "--- Atualizando lista de pacotes ---"
+echo "$mensagem Atualizando lista de pacotes"
 sudo apt-get update
 
-echo "--- Definindo Senha padrao para o MySQL e suas ferramentas ---"
+echo "$mensagem Definindo Senha padrao para o MySQL e suas ferramentas"
 
 DEFAULTPASS="vagrant"
 sudo debconf-set-selections <<EOF
@@ -24,40 +36,53 @@ phpmyadmin      phpmyadmin/setup-password       password $DEFAULTPASS
 phpmyadmin      phpmyadmin/mysql/app-pass       password $DEFAULTPASS
 EOF
 
-echo "--- Instalando pacotes basicos ---"
+echo "$mensagem Instalando pacotes basicos"
 sudo apt-get install software-properties-common vim curl python-software-properties git-core --assume-yes --force-yes
 
-echo "--- Adicionando repositorio do pacote PHP ---"
+echo "$mensagem Adicionando repositorio do pacote PHP"
 sudo add-apt-repository ppa:ondrej/php
 
-echo "--- Atualizando lista de pacotes ---"
+echo "$mensagem Atualizando lista de pacotes"
 sudo apt-get update
 
-echo "--- Instalando MySQL, Phpmyadmin e alguns outros modulos ---"
-sudo apt-get install mysql-server-5.5 mysql-client phpmyadmin --assume-yes --force-yes
+echo "$mensagem Instalando MySQL, Phpmyadmin e alguns outros modulos"
+sudo apt-get install mysql-server mysql-client phpmyadmin --assume-yes --force-yes
+sudo mysql_secure_installation
 
-echo "--- Instalando PHP, Apache e alguns modulos ---"
+echo "$mensagem Instalando PHP, Apache e alguns modulos"
 sudo apt-get install php7.1 php7.1-common --assume-yes --force-yes
 sudo apt-get install php7.1-cli libapache2-mod-php7.1 php7.1-mysql php7.1-curl php-memcached php7.1-dev php7.1-mcrypt php7.1-sqlite3 php7.1-mbstring zip unzip --assume-yes --force-yes
 
-echo "--- Habilitando o PHP 7.1 ---"
+echo "$mensagem Habilitando o PHP 7.1"
 sudo a2dismod php5
 sudo a2enmod php7.1
 
-echo "--- Habilitando mod-rewrite do Apache ---"
+echo "$mensagem Habilitando mod-rewrite do Apache"
 sudo a2enmod rewrite
 
-echo "--- Reiniciando Apache ---"
+echo "$mensagem Reiniciando Apache"
 sudo service apache2 restart
 
-echo "--- Baixando e Instalando Composer ---"
+echo "$mensagem Baixando e Instalando Composer"
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 
-echo "--- Instalando Banco NoSQL -> Redis <- ---" 
+echo "$mensagem Baixando e Instalando Ionic"
+sudo apt-get install nodejs
+sudo apt-get install npm
+sudo apt-get install build-essential libssl-dev
+sudo npm install -g cordova
+sudo apt-get install ia32-libs
+sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0
+sudo npm install -g ionic
+
+echo "$mensagem Instalando Banco NoSQL -> Redis <-" 
 sudo apt-get install redis-server --assume-yes
 sudo apt-get install php7.1-redis --assume-yes
 
+echo "$mensagem Instalando Banco Postgres" 
+sudo apt-get install postgresql postgresql-contrib
+
 # Instale apartir daqui o que você desejar 
 
-echo "[OK] --- Ambiente de desenvolvimento concluido ---"
+echo "$mensagem [OK] --- Ambiente de desenvolvimento concluido ---"
